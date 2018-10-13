@@ -40,18 +40,12 @@ def flip_dates(datestring):
     return year + "/" + month + "/" + day + " " + time + " " + suffix
 
 
-def filter_old_data():
+def filter_old_data(filename):
     """ Removes entries from the csv that occur before the threshhold date """
 
-    dataframe =  pd.read_csv("u_of_i_crime_data.csv")
+    dataframe =  pd.read_csv(filename)
     to_remove = set([dt for dt in dataframe.incident_datetime if flip_dates(dt) < deadline_time(6)])
 
     for dt in to_remove: dataframe = dataframe[dataframe.incident_datetime != dt]
 
-    dataframe.to_csv(path_or_buf="u_of_i_crime_data_recent_only.csv", sep=",")
-
-def main():
-    filter_old_data()
-
-if __name__ == '__main__':
-    main()
+    dataframe.to_csv(path_or_buf="filtered_crime_data.csv", sep=",")
