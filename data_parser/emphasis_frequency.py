@@ -1,6 +1,8 @@
 import pandas as pd
 import decimal
 
+#naive bayes
+
 def drange(start, end, increment):
     start = decimal.Decimal(start)
     end = decimal.Decimal(end)
@@ -40,5 +42,3 @@ def emphasis_frequency(filename):
     print({k:v for k,v in counts.items() if v != 0})
 
     return counts
-
-emphasis_frequency("filtered_crime_data.csv")

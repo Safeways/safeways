@@ -14,4 +14,4 @@ def filter_types(filename):
 
     for tp in to_remove: dataframe = dataframe[dataframe.incident_type_primary != tp]
 
-    dataframe.to_csv(path_or_buf="filtered_crime_data.csv", sep=",")
+    dataframe.to_csv(path_or_buf="data_parser\\filtered_crime_data.csv", sep=",")
