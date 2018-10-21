@@ -8,6 +8,12 @@ SEVERE_CRIMES = ("[UIPD] BATTERY", "[UIPD] CARRYING OUT OF PREMISE", "[UIPD] ROB
                  "[UIPD] ARSON-AGGRAVATED", "[UIPD] PUBLIC URINATION", "[UIPD] SEARCH WARRANT SERVICE")
 
 def filter_types(filename):
+    """
+    Removes entries from the CSV if it is not considered a 'severe crime'
+
+    :param filename: file to remove crimes from
+    """
+
     dataframe = pd.read_csv(filename)
 
     to_remove = [tp for tp in set(dataframe.incident_type_primary) if tp not in SEVERE_CRIMES]

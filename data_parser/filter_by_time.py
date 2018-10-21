@@ -32,6 +32,7 @@ def flip_dates(datestring):
     Datetime gives it in the format yyyy-mm-dd hh:mm:ss.ms
     This function reformats datetime for accurate comparison to CSV
 
+    :param datestring: date to flip
     :return: flipped date
     """
     [date,time,suffix] = datestring.split(" ")
@@ -41,7 +42,11 @@ def flip_dates(datestring):
 
 
 def filter_old_data(filename):
-    """ Removes entries from the csv that occur before the threshhold date """
+    """
+    Removes entries from the csv that occur before the threshhold date
+
+    :param filename: file to remove entries from
+    """
 
     dataframe =  pd.read_csv(filename)
     to_remove = set([dt for dt in dataframe.incident_datetime if flip_dates(dt) < deadline_time(6)])
