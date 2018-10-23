@@ -53,4 +53,4 @@ def filter_old_data(filename):
 
     for dt in to_remove: dataframe = dataframe[dataframe.incident_datetime != dt]
 
-    dataframe.to_csv(path_or_buf="data_parser\\filtered_crime_data.csv", sep=",")
+    dataframe.to_csv(path_or_buf="data_parser\\filtered_by_time_crime_data.csv", sep=",")
