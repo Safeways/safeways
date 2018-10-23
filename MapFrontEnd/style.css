@@ -8,6 +8,7 @@
         padding: 0;
         line-height: 1.6em;
         font-size: 16px;
+        font-family: Arial, Helvetica, sans-serif;
       }
       .controls {
         margin-top: 10px;
@@ -68,7 +69,7 @@
       }
 
       #mode-selector label {
-        font-family: Roboto;
+        font-family: 'Arial', 'Helvetica', 'sans-serif';
         font-size: 13px;
         font-weight: 300;
       }
@@ -84,7 +85,7 @@
       }
 
       #right-panel {
-        font-family: 'Roboto','sans-serif';
+        font-family: 'Arial', 'Helvetica', 'sans-serif';
         line-height: 30px;
         padding-left: 10px;
       }
