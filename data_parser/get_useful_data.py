@@ -34,7 +34,7 @@ def danger_level(freq):
     :return: danger level of the location as calculated from the frequency
     """
 
-    return freq // 10 if freq // 10 <= 10 else 10
+    return int(freq // 10) if freq // 10 <= 10 else int(10)
 
 def get_useful_data(filename, danger_zones):
     """
@@ -63,8 +63,8 @@ def get_useful_data(filename, danger_zones):
 
     recent_severe_crimes = recent_severe_crimes.rename(columns={"incident_type_primary":"type",
                                                                 "incident_description":"description",
-                                                                "address_1":"street address",
-                                                                "incident_datetime":"date and time"})
+                                                                "address_1":"street_address",
+                                                                "incident_datetime":"date_and_time"})
 
     #important data for danger zones
     # - central location
@@ -72,7 +72,7 @@ def get_useful_data(filename, danger_zones):
     dangers = pd.DataFrame({"latitude":[k[0] for k in danger_zones.keys()],
                            "longitutde":[k[1] for k in danger_zones.keys()],
                            "frequency":list(danger_zones.values()),
-                            "danger level":[danger_level(v) for v in danger_zones.values()]})
+                            "danger_level":[danger_level(v) for v in danger_zones.values()]})
 
     return recent_severe_crimes, dangers
 
@@ -85,4 +85,22 @@ def combine_data(recent_severe_crimes, danger_zones):
     :return: dataframe with information from both
     """
 
-    pass
+    column_names = ["date_and_time","type","description","latitude","longitude","street_address","city","state","zip",
+                    "frequency","danger_level"]
+    all_data = pd.DataFrame()
+
+    for column in column_names:
+        col_list = []
+
+        if column in recent_severe_crimes.columns: col_list += list(recent_severe_crimes[column])
+        else: col_list += [None for x in range(len(recent_severe_crimes.date_and_time))]
+
+        if column in danger_zones.columns: col_list += list(danger_zones[column])
+        else: col_list += [None for x in range(len(danger_zones.latitude))]
+
+        to_append = pd.DataFrame(col_list, columns=[column])
+        all_data = all_data.append(to_append, sort=False)
+
+    for column in all_data:
+        for row in all_data[column]:
+            print(row)
