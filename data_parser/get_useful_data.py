@@ -74,33 +74,5 @@ def get_useful_data(filename, danger_zones):
                            "frequency":list(danger_zones.values()),
                             "danger_level":[danger_level(v) for v in danger_zones.values()]})
 
-    return recent_severe_crimes, dangers
-
-def combine_data(recent_severe_crimes, danger_zones):
-    """
-    Combines all data into a single dataframe to pass to the front end
-
-    :param recent_severe_crimes: dataframe with recent crime information
-    :param danger_zones: dataframe with danger zone information
-    :return: dataframe with information from both
-    """
-
-    column_names = ["date_and_time","type","description","latitude","longitude","street_address","city","state","zip",
-                    "frequency","danger_level"]
-    all_data = pd.DataFrame()
-
-    for column in column_names:
-        col_list = []
-
-        if column in recent_severe_crimes.columns: col_list += list(recent_severe_crimes[column])
-        else: col_list += [None for x in range(len(recent_severe_crimes.date_and_time))]
-
-        if column in danger_zones.columns: col_list += list(danger_zones[column])
-        else: col_list += [None for x in range(len(danger_zones.latitude))]
-
-        to_append = pd.DataFrame(col_list, columns=[column])
-        all_data = all_data.append(to_append, sort=False)
-
-    for column in all_data:
-        for row in all_data[column]:
-            print(row)
+    recent_severe_crimes.to_csv("recent_severe_crimes_(frontend_ready).csv")
+    dangers.to_csv("danger_zones_(frontend_ready).csv")
