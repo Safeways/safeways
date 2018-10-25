@@ -1,31 +1,5 @@
 import pandas as pd
 
-def crime_type_formatter(tp):
-    """
-    Cleans up the crime type given by the UIPD.
-    i.e. UIPD crime type data is given as '[UIPD] UNLAWFUL USE OF WEAPONS'
-    This method truncates it such that it becomes 'Unlawful use of weapons'
-
-    :param tp: crime type string to format
-    :return: truncated, well-formatted description
-    """
-
-    if "[UIPD]" in tp:
-        tp = tp[7:]
-
-    return tp.capitalize()
-
-def crime_description_formatter(descr):
-    """
-    Cleans up the description given by UIPD
-
-    :param descr: description to format
-    :return: formatted description
-    """
-
-    descr = descr.replace("<BR/>","")
-    return descr.capitalize()
-
 def danger_level(freq):
     """
     Assigns a danger level to the area based on the amount of crime, on a scale of 0 - 10.
