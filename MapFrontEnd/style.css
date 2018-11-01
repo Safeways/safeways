@@ -100,9 +100,7 @@
       #right-panel {
         font-family: 'Arial', 'Helvetica', 'sans-serif';
         line-height: 30px;
-        padding-left: 0px;
-        padding-top: 0;
-        padding-right: 10px;
+        padding: 0 50px 0 0;
         overflow-y: auto;
         float: right;
         height: 98%;
