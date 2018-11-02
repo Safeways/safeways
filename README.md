@@ -8,5 +8,5 @@ Using data provided by the <a href="https://moto.data.socrata.com/dataset/Univer
 
 # Contributors
 Safeways is a project made by students in the Fall 2018 CS 196 class at the University of Illinois at Urbana-Champaign.</br>
-Project members: Hannah Wang, Kathy Zhou, Dev Satpathy, Willy Ling, Melissa Chen</br>
+Project members: Hannah Wang (hlwang3), Kathy Zhou (kathyyzhou), Dev Satpathy (devsatpathy), Willy Ling (weikeng2), Melissa Chen (melissachen2000)</br>
 Project manager: Kavi Ravuri
