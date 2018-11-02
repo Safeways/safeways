@@ -4,11 +4,42 @@
         var shadows = [];
         var data = [];
         var infowindow;
+
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: {lat:40.109631,lng:-88.227170},
                 zoom: 13,
             });
+
+            console.log("TEST");
+            
+            $(document).ready(function() {
+               "use strict";
+                $.ajax({
+                    type: "GET",
+                    url: "test.csv",
+                    dataType: "text",
+                    success: function(data) {processData(data);}
+                 });
+            });
+
+            function processData(icd10Codes) {
+                "use strict";
+                var input = $.csv.toArrays(icd10Codes);
+                $("#test").append(input);
+            }
+            
+            //var crimes = $.csv.toArrays('test.csv');
+            //console.table(crimes);
+            //console.log(crimes);
+            //var markers;
+
+/*
+            for (int i = 0; i < crimes.length; i++) {
+                for (int j = 0; j < crimes[i].length; j++) {
+                    console.log(crimes[i][j]);
+                }
+            }*/
 
 
             infoWindow = new google.maps.InfoWindow;
@@ -207,6 +238,17 @@
                 }
             }
         }
+
+/*
+        function printData(data) {
+            for (int i = 0; i < data.length; i++) {
+                for (int j = 0; j < data[i].length; j++) {
+                    console.log(data[i][j]);
+                }
+            }
+        }
+*/
+
         // returns a polyline.
         // if hide is set to true, the line is not put on the map
         function drawPolyline(path, color, hide) {
