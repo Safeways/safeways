@@ -4,6 +4,10 @@
         var shadows = [];
         var data = [];
         var infowindow;
+        var crimesArray = []; 
+        var crimes = [];
+        var markers = [];
+
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -11,93 +15,93 @@
                 zoom: 13,
             });
 
-            console.log("TEST");
-            
-            $(document).ready(function() {
-               "use strict";
-                $.ajax({
-                    type: "GET",
-                    url: "test.csv",
-                    dataType: "text",
-                    success: function(data) {processData(data);}
-                 });
-            });
-
-            function processData(icd10Codes) {
-                "use strict";
-                var input = $.csv.toArrays(icd10Codes);
-                $("#test").append(input);
-            }
-            
-            //var crimes = $.csv.toArrays('test.csv');
-            //console.table(crimes);
-            //console.log(crimes);
-            //var markers;
-
-/*
-            for (int i = 0; i < crimes.length; i++) {
-                for (int j = 0; j < crimes[i].length; j++) {
-                    console.log(crimes[i][j]);
-                }
-            }*/
-
-
             infoWindow = new google.maps.InfoWindow;
 
-            // array of markers
-            var markers = [
-                {
-                coords:{lat:40.108241,lng:-88.223865},
-                //iconImage: src = 'robbery.png',
-                iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-                content: '<h1>Robbery</h1>'
-                },
 
-                {
-                coords:{lat:40.110342,lng: -88.228865},
-                //iconImage: src = 'assault.png',
-                iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-                content: '<h1>Assault</h1>'
-                },
-                {
-                coords:{lat:40.107938,lng: -88.229562},
-                //iconImage: src = 'assault.png',
-                iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-                content: '<h1>Assault</h1>'
+            // get csv file
+            $(document).ready(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "test.csv",
+                    dataType: "text",
+                    success: function(test) {processData(test);}
+                });
+            });
+
+            //process crime data from csv, add markers to map
+            function processData(allText) {
+                var allTextLines = allText.split(/\r\n|\n/);
+                var headers = allTextLines[0].split(',');
+
+                // split up csv text file into a 2d array
+                for (var i=1; i<allTextLines.length; i++) {
+                    var data = allTextLines[i].split(',');
+                    if (data.length == headers.length) {
+
+                        var tarr = [];
+                        for (var j=0; j<headers.length; j++) {
+                            tarr.push(data[j]);
+                        }
+                    crimesArray.push(tarr);
+                    }
+                }
+
+
+                // pick out latitude and longitude data from all the data, store that in crimes array
+                for (var i = 0; i < crimesArray.length; i++) {
+                    var row = [];
+                    for (var j = 1; j <= 2; j++) {
+                        row.push(crimesArray[i][j]);
+                    }
+                    crimes.push(row);
                 }
-            ];
 
-            // loop through markers
-            for(var i = 0; i < markers.length; i++){
-                // add marker
-                addMarker(markers[i]);
+
+                // loop through crimes and create markers for each
+                for (var i = 0; i < crimes.length; i++) {
+                    markers.push(
+                        {
+                            coords:{lat: Number(crimes[i][0]),lng: Number(crimes[i][1])},
+                            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                            content: '<h1>Test</h1>'
+                        }
+                    );
+                }
+
+                // add each crime marker to the map
+                for(var i = 0; i < markers.length; i++){
+                    // add marker
+                    addMarker(markers[i]);
+                }
+
+
+                // add marker function
+                function addMarker(props){
+                    var marker = new google.maps.Marker({
+                    position:props.coords,
+                    map:map,
+                    });
+
+                    // check for custom icon
+                    if(props.iconImage){
+                        // set icon image
+                        marker.setIcon(props.iconImage);
+                    }
+
+                    // check content
+                    if(props.content){
+                        var infoWindow = new google.maps.InfoWindow({
+                        content:props.content
+                    });
+
+                    marker.addListener('click', function(){
+                        infoWindow.open(map, marker);
+                    });
+                    }
+                }
+
             }
 
-
-            // add marker function
-            function addMarker(props){
-                var marker = new google.maps.Marker({
-                position:props.coords,
-                map:map,
-                });
-
-                // check for custom icon
-                if(props.iconImage){
-                    // set icon image
-                    marker.setIcon(props.iconImage);
-                }
-
-                // check content
-                if(props.content){
-                    var infoWindow = new google.maps.InfoWindow({
-                    content:props.content
-                });
-
-                marker.addListener('click', function(){
-                    infoWindow.open(map, marker);
-                });
-                }
-            }
 
             // get current location
             if (navigator.geolocation) {
@@ -239,16 +243,6 @@
             }
         }
 
-/*
-        function printData(data) {
-            for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[i].length; j++) {
-                    console.log(data[i][j]);
-                }
-            }
-        }
-*/
-
         // returns a polyline.
         // if hide is set to true, the line is not put on the map
         function drawPolyline(path, color, hide) {
@@ -275,4 +269,5 @@
             }
             return line;
         }
+        
         google.maps.event.addDomListener(window, 'load', initMap);
