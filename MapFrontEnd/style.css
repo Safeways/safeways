@@ -36,8 +36,8 @@
       }
 
       #main-header h1 {
-          display: inline-block;
-          padding-left: 2%;
+        display: inline-block;
+        padding-left: 2%;
       }
 
       #main-header ul {
@@ -53,9 +53,21 @@
       }
 
       #main-header a {
-          color: whitesmoke;
-          text-decoration: none;
+        color: whitesmoke;
+        text-decoration: none;
       }
+
+      #about {
+        text-indent: 2%;
+        display: block;
+      }
+
+      #about img {
+        border-style: solid;
+        border-color: coral;
+        border-width: 3px;
+      }
+
 
       #origin-input,
       #destination-input {
