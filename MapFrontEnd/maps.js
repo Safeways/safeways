@@ -28,12 +28,12 @@
                 });
             });
 
-            //process crime data from csv, add markers to map
+            // process crime data from csv, add markers to map
             function processData(allText) {
                 var allTextLines = allText.split(/\r\n|\n/);
                 var headers = allTextLines[0].split(',');
 
-                // split up csv text file into a 2d array
+                // parse csv text into a 2d array
                 for (var i=1; i<allTextLines.length; i++) {
                     var data = allTextLines[i].split(',');
                     if (data.length == headers.length) {
