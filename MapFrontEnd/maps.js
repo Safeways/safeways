@@ -224,8 +224,59 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         travelMode: this.travelMode,
     }, function(response, status) {
         if (status === 'OK') {
+            var polyline = new google.maps.Polyline({
+              path: [],
+              strokeColor: '#FF0000',
+              strokeWeight: 3
+            });
+            var bounds = new google.maps.LatLngBounds();
+
+
+            var legs = response.routes[0].legs;
+            for (i=0;i<legs.length;i++) {
+              var steps = legs[i].steps;
+              for (j=0;j<steps.length;j++) {
+                var nextSegment = steps[j].path;
+                for (k=0;k<nextSegment.length;k++) {
+                  polyline.getPath().push(nextSegment[k]);
+                  bounds.extend(nextSegment[k]);
+                }
+              }
+            }
+
+            polyline.setMap(map);
+            map.fitBounds(bounds);
+
+            var pos1 = new google.maps.LatLng(40.110413,-88.223920);
+            var marker1 = new google.maps.Marker({position: pos1, map: map});
+
+            if (google.maps.geometry.poly.isLocationOnEdge(pos1, polyline, 0.0005)) {
+                console.log("POS 1: Relocate!");
+            } else {
+                console.log("POS 1: No danger");
+            }
+
+            var pos2 = new google.maps.LatLng(40.110434,-88.223475);
+            var marker2 = new google.maps.Marker({position: pos2, map: map});
+
+            if (google.maps.geometry.poly.isLocationOnEdge(pos2, polyline, 0.0005)) {
+                console.log("POS 2: Relocate!");
+            } else {
+                console.log("POS 2: No danger");
+            }
+
+            var pos3 = new google.maps.LatLng(40.110452,-88.222957);
+            var marker3 = new google.maps.Marker({position: pos3, map: map});
+
+            if (google.maps.geometry.poly.isLocationOnEdge(pos3, polyline, 0.0005)) {
+                console.log("POS 3: Relocate!");
+            } else {
+                console.log("POS 3: No danger");
+            }
+
             me.directionsDisplay.setDirections(response);
 
+            
 
         } else {
         window.alert('Directions request failed due to ' + status);
