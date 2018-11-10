@@ -49,7 +49,8 @@
         text-align: center;
         list-style: none;
         display: inline-block;
-        padding: 10%;
+        margin-left: 20px;
+        margin-top: 3px;
       }
 
       #main-header a {
@@ -59,13 +60,21 @@
 
       #about {
         text-indent: 2%;
+        margin-right: auto;
+        margin-left: auto;
+        width: 50%;
         display: block;
       }
 
       #about img {
+        margin-right: auto;
+        margin-left: auto;
+        width: 50%;
+        display: block;
+        max-height: 30%;
         border-style: solid;
         border-color: coral;
-        border-width: 3px;
+        border-width: 5px;
       }
 
 
