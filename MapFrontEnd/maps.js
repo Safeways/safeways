@@ -1,28 +1,21 @@
-// This example requires the Places library. Include the libraries=places
-// parameter when you first load the API. For example:
-// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 var currentLocation = {lat:40.109631,lng:-88.227170};
+var map;
+var directionsService;
+var crimeData = []; 
+var coordinates = [];
+var markers = [];
 
 function initMap() {
 
-    /*
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-        lat
-        });
-    }*/
-
-    var map = new google.maps.Map(document.getElementById('map'), {
-        mapTypeControl: false,
-        //center: {lat:40.109631,lng:-88.227170},
+    map = new google.maps.Map(document.getElementById('map'), {
         center: currentLocation,
-        //center: {latitude, longitude},
         zoom: 13
     });
 
-    infoWindow = new google.maps.InfoWindow;
+    plotCrimes();
 
-    // Try HTML5 geolocation.
+
+    // get current location
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
         var pos = {
@@ -31,84 +24,116 @@ function initMap() {
         };
         currentLocation = pos;
 
-        var marker = new google.maps.Marker({
+        var currentLocationMarker = new google.maps.Marker({
             position:pos,
             map:map,
             icon: 'http://www.robotwoods.com/dev/misc/bluecircle.png'
-            //icon: src = 'current.png'
         });
-        //infoWindow.setPosition(pos);
-        //infoWindow.setContent('Current location.');
-        //infoWindow.open(map);
         map.setCenter(pos);
         map.setZoom(16);
         }, function() {
         handleLocationError(true, infoWindow, map.getCenter());
         });
     } else {
-        // Browser doesn't support Geolocation
+        // if browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
     }
 
-    // array of markers
-    var markers = [
-        {
-        coords:{lat:40.108241,lng:-88.223865},
-        //iconImage: src = 'robbery.png',
-        iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-        content: '<h1>Robbery</h1>'
-        },
-
-        {
-        coords:{lat:40.110342,lng: -88.228865},
-        //iconImage: src = 'assault.png',
-        iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-        content: '<h1>Assault</h1>'
-        },
-        {
-        coords:{lat:40.107938,lng: -88.229562},
-        //iconImage: src = 'assault.png',
-        iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-        content: '<h1>Assault</h1>'
-        }
-    ];
-
-    // loop through markers
-    for(var i = 0; i < markers.length; i++){
-        // add marker
-        addMarker(markers[i]);
-    }
-
-
-    // add marker function
-    function addMarker(props){
-        var marker = new google.maps.Marker({
-        position:props.coords,
-        map:map,
-        });
-
-        // check for custom icon
-        if(props.iconImage){
-            // set icon image
-            marker.setIcon(props.iconImage);
-        }
-
-        // check content
-        if(props.content){
-            var infoWindow = new google.maps.InfoWindow({
-            content:props.content
-        });
-
-        marker.addListener('click', function(){
-            infoWindow.open(map, marker);
-        });
-        }
-    }
 
     new AutocompleteDirectionsHandler(map);
-
-
 }
+
+
+
+function plotCrimes() {
+
+    // get csv file
+    $(document).ready(function() {
+        $.ajax({
+           type: "GET",
+           url: "test.csv",
+           dataType: "text",
+           success: function(test) {processData(test);}
+         });
+     });
+
+
+    // process crime data from csv, add markers to map
+    function processData(allText) {
+        var allTextLines = allText.split(/\r\n|\n/);
+        var headers = allTextLines[0].split(',');
+
+        // parse csv text into a 2d array
+        for (var i=1; i<allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+            if (data.length == headers.length) {
+
+                var tarr = [];
+                for (var j=0; j<headers.length; j++) {
+                        tarr.push(data[j]);
+                }
+                crimeData.push(tarr);
+            }
+        }
+
+
+        // pick out latitude and longitude data from all the data, store that in crimes array
+        for (var i = 0; i < crimeData.length; i++) {
+            var row = [];
+            for (var j = 1; j <= 2; j++) {
+                row.push(crimeData[i][j]);
+            }
+            coordinates.push(row);
+        }
+
+
+        // loop through crimes and create markers for each
+        for (var i = 0; i < coordinates.length; i++) {
+            markers.push(
+                {
+                    coords:{lat: Number(coordinates[i][0]),lng: Number(coordinates[i][1])},
+                    iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                    content: '<h1>Sample Data</h1>'
+                }
+            );
+        }
+
+
+        // add each crime marker to the map
+        for(var i = 0; i < markers.length; i++){
+            // add marker
+            addMarker(markers[i]);
+        }
+
+
+        // add marker function
+        function addMarker(props){
+            var marker = new google.maps.Marker({
+            position:props.coords,
+            map:map,
+            });
+
+            // check for custom icon
+            if(props.iconImage){
+                // set icon image
+                marker.setIcon(props.iconImage);
+            }
+
+            // check content
+            if(props.content){
+                var infoWindow = new google.maps.InfoWindow({
+                    content:props.content
+                });
+
+                marker.addListener('click', function(){
+                    infoWindow.open(map, marker);
+                });
+            }
+        }
+    }
+}
+
+
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
@@ -119,20 +144,17 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 
-/**
-* @constructor
-*/
+// set up autocomplete directions functionality
 function AutocompleteDirectionsHandler(map) {
     this.map = map;
     this.originPlaceId = null;
     this.destinationPlaceId = null;
     this.travelMode = 'WALKING';
-    //var originInput = document.getElementById('origin-input');
+
     var destinationInput = document.getElementById('destination-input');
     var modeSelector = document.getElementById('mode-selector');
     this.directionsService = new google.maps.DirectionsService;
-    //this.directionsDisplay = new google.maps.DirectionsRenderer;
-    //this.directionsDisplay.setMap(map);
+
 
     // added draggable marker option to the renderer and right panel
     this.directionsDisplay = new google.maps.DirectionsRenderer({
@@ -140,8 +162,8 @@ function AutocompleteDirectionsHandler(map) {
         map: map,
         panel: document.getElementById('right-panel')
     }); 
-    //var originAutocomplete = new google.maps.places.Autocomplete(
-    //    originInput, {placeIdOnly: true});
+
+
     var destinationAutocomplete = new google.maps.places.Autocomplete(
         destinationInput, {placeIdOnly: true});
 
@@ -153,16 +175,14 @@ function AutocompleteDirectionsHandler(map) {
     this.setupClickListener('changemode-transit', 'TRANSIT');
     this.setupClickListener('changemode-driving', 'DRIVING');
 
-    //this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
     this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
 
-    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
     this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
     this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
 }
 
-// Sets a listener on a radio button to change the filter type on Places
-// Autocomplete.
+
+// sets a listener on a radio button to change the filter type on places autocomplete
 AutocompleteDirectionsHandler.prototype.setupClickListener = function(id, mode) {
     var radioButton = document.getElementById(id);
     var me = this;
@@ -172,6 +192,8 @@ AutocompleteDirectionsHandler.prototype.setupClickListener = function(id, mode) 
     });
 ;
 
+
+// sets up a listener for a new destination
 AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(autocomplete, mode) {
     var me = this;
     autocomplete.bindTo('bounds', this.map);
@@ -181,16 +203,14 @@ AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(aut
             window.alert("Please select an option from the dropdown list.");
             return;
         }
-        //if (mode === 'ORIG') {
-        //  me.originPlaceId = place.place_id;
-        //} else {
+
         me.destinationPlaceId = place.place_id;
-        //}
         me.route();
     });
 
 };
   
+//find route from current location to autocomplete location
 AutocompleteDirectionsHandler.prototype.route = function() {
     if (!this.destinationPlaceId) {
         return;
@@ -198,16 +218,18 @@ AutocompleteDirectionsHandler.prototype.route = function() {
     var me = this;
 
     this.directionsService.route({
-        //origin: {'placeId': this.originPlaceId},
         origin: currentLocation,
         destination: {'placeId': this.destinationPlaceId},
+        provideRouteAlternatives: true,
         travelMode: this.travelMode,
-        //provideRouteAlternatives: true
     }, function(response, status) {
         if (status === 'OK') {
             me.directionsDisplay.setDirections(response);
+
+
         } else {
         window.alert('Directions request failed due to ' + status);
         }
     });
-}}   
+}}
+
