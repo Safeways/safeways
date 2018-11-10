@@ -208,6 +208,8 @@
                 }
             });
         }
+
+        
         // this makes one of the colored routes visible.
         function highlightRoute(index, e) {
             for(var j in  polylines ) {
