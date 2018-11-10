@@ -48,5 +48,5 @@ def get_useful_data(filename, danger_zones):
                            "frequency":list(danger_zones.values()),
                             "danger_level":[danger_level(v) for v in danger_zones.values()]})
 
-    recent_severe_crimes.to_csv("recent_severe_crimes_(frontend_ready).csv")
-    dangers.to_csv("danger_zones_(frontend_ready).csv")
+    recent_severe_crimes.to_csv("recent_severe_crimes_(frontend_ready).csv",index=False)
+    dangers.to_csv("danger_zones_(frontend_ready).csv",index=False)
