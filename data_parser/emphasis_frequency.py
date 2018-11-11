@@ -42,7 +42,8 @@ def frequency_counter(filename):
     i.e. (i.e. (40.255,-88) and (40.264,-88) are considered to be the same area)
 
     :param filename: filename to take crimes from
-    :return: dictionary with coordinates (of blocks) mapped to frequency of crimes in that area
+    :return: dictionary with coordinates (of blocks) mapped to the dates/times that crimes
+            have happened at that location
     """
 
     THRESHHOLD = 5 # if the number of crimes in an area exceed threshhold, it is marked as a dangerous zone
@@ -54,9 +55,9 @@ def frequency_counter(filename):
     for i in range(len(dataframe.latitude)):
         lat = truncate_2(dataframe.latitude[i])
         long = truncate_2(dataframe.longitude[i])
-        count[lat, long].append(dataframe.loc[i])
+        count[lat, long].append(dataframe.loc[i,"date_and_time"])
 
-    return {k:v for k,v in count.items() if len(v) >= THRESHHOLD}
+    return count
 
-lol = (frequency_counter("filtered_by_type_crime_data.csv"))
-print(len(lol.keys()))
+def dangerous(counts):
+    print(counts)
