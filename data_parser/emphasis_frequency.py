@@ -52,6 +52,11 @@ def frequency_counter(filename):
 
     count = {(truncate_2(lat[i]), truncate_2(long[i])):[] for i in range(len(lat))}
     for i in range(len(dataframe.latitude)):
-        count[(truncate_2(dataframe.latitude[i]), truncate_2(dataframe.longitude[i]))].append(dataframe.loc[i])
+        lat = truncate_2(dataframe.latitude[i])
+        long = truncate_2(dataframe.longitude[i])
+        count[lat, long].append(dataframe.loc[i])
 
     return {k:v for k,v in count.items() if len(v) >= THRESHHOLD}
+
+lol = (frequency_counter("filtered_by_type_crime_data.csv"))
+print(len(lol.keys()))
