@@ -49,8 +49,8 @@ def filter_old_data(filename):
     """
 
     dataframe =  pd.read_csv(filename)
-    to_remove = set([dt for dt in dataframe.incident_datetime if flip_dates(dt) < deadline_time(6)])
+    to_remove = set([dt for dt in dataframe.date_and_time if flip_dates(dt) < deadline_time(6)])
 
-    for dt in to_remove: dataframe = dataframe[dataframe.incident_datetime != dt]
+    for dt in to_remove: dataframe = dataframe[dataframe.date_and_time != dt]
 
-    dataframe.to_csv(path_or_buf="filtered_by_time_crime_data.csv", sep=",")
+    dataframe.to_csv(path_or_buf="filtered_by_time_crime_data.csv", sep=",", index=False)

@@ -36,10 +36,10 @@ def truncate_2(num):
 
 def frequency_counter(filename):
     """
-    Counts how many times a crime occurs at the same place.
+    Creates a dictionary that correlates a location with crimes that happen at that place.
     'Same place' in this context means it is within the same section
     Sections are defined as areas within .01 of each other
-    i.e. (i.e. (40.255,-88) and (40.265,-88) are considered to be the same area)
+    i.e. (i.e. (40.255,-88) and (40.264,-88) are considered to be the same area)
 
     :param filename: filename to take crimes from
     :return: dictionary with coordinates (of blocks) mapped to frequency of crimes in that area
@@ -49,15 +49,9 @@ def frequency_counter(filename):
 
     dataframe = pd.read_csv(filename)
     [lat,long] = [list(dataframe.latitude), list(dataframe.longitude)]
-    coordinates = [(truncate_4(lat[i]), truncate_4(long[i])) for i in range(len(lat))]
 
-    count = {}
+    count = {(truncate_2(lat[i]), truncate_2(long[i])):[] for i in range(len(lat))}
+    for i in range(len(dataframe.latitude)):
+        count[(truncate_2(dataframe.latitude[i]), truncate_2(dataframe.longitude[i]))].append(dataframe.loc[i])
 
-    for c in coordinates:
-        lt = truncate_2(truncate_2(c[0]))
-        lg = truncate_2(truncate_2(c[1]))
-
-        if (lt, lg) not in count: count[(lt,lg)] = 1
-        else: count[(lt,lg)] += 1
-
-    return {k:v for k,v in count.items() if v >= THRESHHOLD}
+    return {k:v for k,v in count.items() if len(v) >= THRESHHOLD}
