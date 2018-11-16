@@ -25,4 +25,4 @@ def get_useful_data(danger_zones):
                            "frequency":list(danger_zones.values()),
                             "danger_level":[danger_level(v) for v in danger_zones.values()]})
 
-    dangers.to_csv("danger_zones_(frontend_ready).csv")
+    dangers.to_csv("danger_zones_(frontend_ready).csv",index=False)

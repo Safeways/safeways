@@ -1,5 +1,6 @@
 import pandas as pd
 import decimal
+import datetime
 
 def drange(start, end, increment):
     """
@@ -60,4 +61,10 @@ def frequency_counter(filename):
     return count
 
 def dangerous(counts):
-    print(counts)
+    # if a crime hasn't happened there within an year, it is disregraded as a candidate
+    recent_only = {}
+    for k,v in counts.items():
+        if str(datetime.date.today().year) in "\t".join(v): recent_only[k] = v #not robust for early parts of the year
+    print(recent_only)
+
+dangerous(frequency_counter("filtered_by_type_crime_data.csv"))
