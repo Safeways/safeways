@@ -41,30 +41,25 @@ def frequency_counter(filename):
     'Same place' in this context means it is within the same section
     Sections are defined as areas within .01 of each other
     i.e. (i.e. (40.255,-88) and (40.264,-88) are considered to be the same area)
-
     :param filename: filename to take crimes from
     :return: dictionary with coordinates (of blocks) mapped to the dates/times that crimes
             have happened at that location
     """
-
-    THRESHHOLD = 5 # if the number of crimes in an area exceed threshhold, it is marked as a dangerous zone
-
     dataframe = pd.read_csv(filename)
-    [lat,long] = [list(dataframe.latitude), list(dataframe.longitude)]
+    [lat, long] = [list(dataframe.latitude), list(dataframe.longitude)]
 
-    count = {(truncate_2(lat[i]), truncate_2(long[i])):[] for i in range(len(lat))}
+    count = {(truncate_2(lat[i]), truncate_2(long[i])): [] for i in range(len(lat))}
     for i in range(len(dataframe.latitude)):
         lat = truncate_2(dataframe.latitude[i])
         long = truncate_2(dataframe.longitude[i])
-        count[lat, long].append(dataframe.loc[i,"date_and_time"])
+        count[lat, long].append(dataframe.loc[i, "date_and_time"])
 
     return count
+
 
 def dangerous(counts):
     # if a crime hasn't happened there within an year, it is disregraded as a candidate
     recent_only = {}
-    for k,v in counts.items():
-        if str(datetime.date.today().year) in "\t".join(v): recent_only[k] = v #not robust for early parts of the year
+    for k, v in counts.items():
+        if str(datetime.date.today().year) in "\t".join(v): recent_only[k] = v  # not robust for early parts of the year
     print(recent_only)
-
-dangerous(frequency_counter("filtered_by_type_crime_data.csv"))

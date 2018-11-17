@@ -10,7 +10,6 @@ SEVERE_CRIMES = ("[UIPD] BATTERY", "[UIPD] CARRYING OUT OF PREMISE", "[UIPD] ROB
 def filter_types(filename):
     """
     Removes entries from the CSV if it is not considered a 'severe crime'
-
     :param filename: file to remove crimes from
     """
 

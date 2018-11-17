@@ -13,7 +13,6 @@ def danger_level(freq):
 def get_useful_data(danger_zones):
     """
     Retrieves the information that the front-end needs to map and display the crime zones. Saves data as CSV.
-
     :param danger_zones: dictionary of dangerous areas mapped to frequency of crimes in that area
     """
 
@@ -21,7 +20,7 @@ def get_useful_data(danger_zones):
     # - central location
     # - frequency (emphasize the time period)
     dangers = pd.DataFrame({"latitude":[k[0] for k in danger_zones.keys()],
-                           "longitutde":[k[1] for k in danger_zones.keys()],
+                           "longitude":[k[1] for k in danger_zones.keys()],
                            "frequency":list(danger_zones.values()),
                             "danger_level":[danger_level(v) for v in danger_zones.values()]})
 
