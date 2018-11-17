@@ -8,7 +8,7 @@ def danger_level(freq):
     :return: danger level of the location as calculated from the frequency
     """
 
-    return int(freq // 10) if freq // 10 <= 10 else int(10)
+    return int(freq // 10) if freq // 10 <= 10 else 10
 
 def get_useful_data(danger_zones):
     """
@@ -21,7 +21,7 @@ def get_useful_data(danger_zones):
     # - frequency (emphasize the time period)
     dangers = pd.DataFrame({"latitude":[k[0] for k in danger_zones.keys()],
                            "longitude":[k[1] for k in danger_zones.keys()],
-                           "frequency":len(danger_zones.values()),
+                           "frequency":[len(v) for v in danger_zones.values()],
                             "danger_level":[danger_level(len(v)) for v in danger_zones.values()]})
 
     dangers.to_csv("danger_zones_(frontend_ready).csv",index=False)
