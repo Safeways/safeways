@@ -21,7 +21,7 @@ def get_useful_data(danger_zones):
     # - frequency (emphasize the time period)
     dangers = pd.DataFrame({"latitude":[k[0] for k in danger_zones.keys()],
                            "longitude":[k[1] for k in danger_zones.keys()],
-                           "frequency":list(danger_zones.values()),
-                            "danger_level":[danger_level(v) for v in danger_zones.values()]})
+                           "frequency":len(danger_zones.values()),
+                            "danger_level":[danger_level(len(v)) for v in danger_zones.values()]})
 
     dangers.to_csv("danger_zones_(frontend_ready).csv",index=False)

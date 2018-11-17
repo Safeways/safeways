@@ -3,7 +3,7 @@ import pandas as pd
 
 def deadline_time(threshhold):
     """
-    Removes all data from the csv that occurs before a certain number of months (threshhold)
+    Returns a date threshhold number of months before today's date
 
     :param threshhold: number of months to keep
     :return: threshhold date

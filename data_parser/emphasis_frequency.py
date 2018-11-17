@@ -1,6 +1,7 @@
 import pandas as pd
 import decimal
 import datetime
+from filter_by_time import flip_dates, deadline_time
 
 def drange(start, end, increment):
     """
@@ -58,8 +59,21 @@ def frequency_counter(filename):
 
 
 def dangerous(counts):
-    # if a crime hasn't happened there within an year, it is disregraded as a candidate
+    """
+    Using the counts dictionary returned by the previous function, chooses only the locations where crimes have
+         occured more than 6 times in the past year.
+
+    :param counts: dictionary of locations mapped to times that crimes have happened there
+    :return: dictionary of same format but only with locations where crimes have happened recently
+    """
     recent_only = {}
     for k, v in counts.items():
-        if str(datetime.date.today().year) in "\t".join(v): recent_only[k] = v  # not robust for early parts of the year
-    print(recent_only)
+        count = 0
+        for dt in v:
+            if flip_dates(dt) > deadline_time(12):
+                count += 1
+
+        if count >= 6:
+            recent_only[k] = v
+
+    return recent_only
