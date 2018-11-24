@@ -1,0 +1,16 @@
+danger_rank,type_full_name,type_csv_label,avoidance_radius_miles
+1,aggravated battery,Battery-aggravated,0.05
+2,battery,Battery,0.05
+3,unlawful use of weapons,Unlawful use of weapons,0.04
+4,aggravated robbery,Robbery-aggravated,0.03
+5,armed robbery,Robbery-armed,0.03
+6,bomb threat,Bomb threat,0.04
+7,robbery,Robbery,0.02
+8,unlawful possession of firearm and ammunition,Unlawful poss firearm & ammunition,0.02
+9,aggravated arson,Arson-aggravated,0.02
+10,warrant from in-state,Warrant-in state,0.01
+11,mental case transportation,Mental case-transportation,0.02
+12,search warrant service,Search warrant service,0.01
+13,carrying out of premise,Carrying out of premise,0.01
+14,public urination,Public urination,0.01
+15,possession of alcohol on pub property or parking lot,Poss alcohol pub prob / parking lot,0.01
