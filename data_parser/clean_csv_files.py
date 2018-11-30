@@ -41,7 +41,7 @@ def clean_address(file):
         file.at[i, "city"] = file.at[i, "city"].title()
 
 def clean_all():
-    file = pd.read_csv("recent_severe_crimes_(frontend_ready).csv")
+    file = pd.read_csv("frontend_files\\recent_severe_crimes.csv")
     clean_address(clean_descr(clean_type(file)))
-    file.to_csv(path_or_buf="recent_severe_crimes_(frontend_ready).csv", sep=",", index=False)
+    file.to_csv(path_or_buf="frontend_files\\recent_severe_crimes.csv", sep=",", index=False)
 
