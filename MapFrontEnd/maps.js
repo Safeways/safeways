@@ -227,13 +227,18 @@ AutocompleteDirectionsHandler.prototype.route = function() {
             var toRemove = []
 
             // loop through 3 alternates routes
-            for (var r = 0; r < 3; r++) {
+            for (var r = 0; r < Math.min(response.routes.length, 3); r++) {
                 var polyline = new google.maps.Polyline({
                   path: [],
                   strokeColor: '#FF0000',
                   strokeWeight: 3
                 });
                 var bounds = new google.maps.LatLngBounds();
+
+                
+                if (r >= response.routes.length || response.routes[r] == null) {
+                    continue;
+                }
 
                 // construct polyline of route (only does first alternate route atm)
                 var legs = response.routes[r].legs;
@@ -263,9 +268,10 @@ AutocompleteDirectionsHandler.prototype.route = function() {
                 }
             }
 
+            
             var newRoutes = [];
-
-            for (var i = 0; i < 3; i++) {
+            
+            for (var i = 0; i < Math.min(response.routes.length, 3); i++) {
                 var isValid = true;
                 for (var j = 0; j < toRemove.length; j++) {
                     if (i == toRemove[j]) {
@@ -279,8 +285,10 @@ AutocompleteDirectionsHandler.prototype.route = function() {
                 }
             }
 
-            response.routes = newRoutes;
+            // remove invalid routes, prevent them from being displayed
+            response.routes = newRoutes; //comment this to display all routes again
 
+            // display only the valid routes
             me.directionsDisplay.setDirections(response);
 
             
