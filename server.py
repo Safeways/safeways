@@ -1,4 +1,6 @@
 from flask import Flask, render_template
+from apscheduler.schedulers.background import BackgroundScheduler
+
 from services.update_csv import update_csv
 from services.filter_by_type import filter_types
 from services.filter_by_time import filter_old_data
@@ -18,10 +20,13 @@ def update_data():
     clean_all()
     print("Done")
 
+scheduler = BackgroundScheduler()
+job = scheduler.add_job(update_data, 'interval', days=1)
+scheduler.start()
+
 @app.route("/")
 @app.route("/index.html")
 def index():
-    update_data()
     return render_template("index.html")
 
 @app.route("/about.html")
