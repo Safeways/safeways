@@ -24,4 +24,4 @@ def get_useful_data(danger_zones):
                            "frequency":[len(v) for v in danger_zones.values()],
                             "danger_level":[danger_level(len(v)) for v in danger_zones.values()]})
 
-    dangers.to_csv("frontend_files\\danger_zones.csv",index=False)
+    dangers.to_csv("services\\frontend_files\\danger_zones.csv",index=False)

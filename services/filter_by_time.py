@@ -53,4 +53,4 @@ def filter_old_data(filename):
 
     for dt in to_remove: dataframe = dataframe[dataframe.date_and_time != dt]
 
-    dataframe.to_csv(path_or_buf="frontend_files\\recent_severe_crimes.csv", sep=",", index=False)
+    dataframe.to_csv(path_or_buf="services\\frontend_files\\recent_severe_crimes.csv", sep=",", index=False)
