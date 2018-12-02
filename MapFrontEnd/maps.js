@@ -1,9 +1,10 @@
 var currentLocation = {lat:40.109631,lng:-88.227170};
 var map;
 var directionsService;
-var crimeData = []; 
+var allCrimeData = []; 
 var coordinates = [];
 var markers = [];
+var avoidanceRadiusDict = {};
 
 function initMap() {
 
@@ -51,7 +52,7 @@ function plotCrimes() {
     $(document).ready(function() {
         $.ajax({
            type: "GET",
-           url: "test.csv",
+           url: "recent_severe_crimes.csv",
            dataType: "text",
            success: function(test) {processData(test);}
          });
@@ -68,20 +69,20 @@ function plotCrimes() {
             var data = allTextLines[i].split(',');
             if (data.length == headers.length) {
 
-                var tarr = [];
+                var tempArr = [];
                 for (var j=0; j<headers.length; j++) {
-                        tarr.push(data[j]);
+                        tempArr.push(data[j]);
                 }
-                crimeData.push(tarr);
+                allCrimeData.push(tempArr);
             }
         }
 
 
         // pick out latitude and longitude data from all the data, store that in crimes array
-        for (var i = 0; i < crimeData.length; i++) {
+        for (var i = 0; i < allCrimeData.length; i++) {
             var row = [];
-            for (var j = 1; j <= 2; j++) {
-                row.push(crimeData[i][j]);
+            for (var j = 7; j <= 8; j++) {
+                row.push(allCrimeData[i][j]);
             }
             coordinates.push(row);
         }
@@ -93,7 +94,9 @@ function plotCrimes() {
                 {
                     coords:{lat: Number(coordinates[i][0]),lng: Number(coordinates[i][1])},
                     iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-                    content: '<h1>Sample Data</h1>'
+                    content: '<h1>'+allCrimeData[i][1]+'</h1>'+
+                             '<p><b>Date and Time: </b>'+allCrimeData[i][0]+'</p>'+
+                             '<p><b>Description: </b>'+allCrimeData[i][2]+'</p>'
                 }
             );
         }
@@ -132,7 +135,6 @@ function plotCrimes() {
         }
     }
 }
-
 
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -224,56 +226,71 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         travelMode: this.travelMode,
     }, function(response, status) {
         if (status === 'OK') {
-            var polyline = new google.maps.Polyline({
-              path: [],
-              strokeColor: '#FF0000',
-              strokeWeight: 3
-            });
-            var bounds = new google.maps.LatLngBounds();
+            var toRemove = []
 
+            // loop through 3 alternates routes
+            for (var r = 0; r < Math.min(response.routes.length, 3); r++) {
+                var polyline = new google.maps.Polyline({
+                  path: [],
+                  strokeColor: '#FF0000',
+                  strokeWeight: 3
+                });
+                var bounds = new google.maps.LatLngBounds();
 
-            var legs = response.routes[0].legs;
-            for (i=0;i<legs.length;i++) {
-              var steps = legs[i].steps;
-              for (j=0;j<steps.length;j++) {
-                var nextSegment = steps[j].path;
-                for (k=0;k<nextSegment.length;k++) {
-                  polyline.getPath().push(nextSegment[k]);
-                  bounds.extend(nextSegment[k]);
+                
+                if (r >= response.routes.length || response.routes[r] == null) {
+                    continue;
                 }
-              }
+
+                // construct polyline of route (only does first alternate route atm)
+                var legs = response.routes[r].legs;
+                for (i = 0; i < legs.length; i++) {
+                  var steps = legs[i].steps;
+                  for (j = 0; j < steps.length; j++) {
+                    var nextSegment = steps[j].path;
+                    for (k = 0; k < nextSegment.length; k++) {
+                      polyline.getPath().push(nextSegment[k]);
+                      bounds.extend(nextSegment[k]);
+                    }
+                  }
+                }
+
+
+                //polyline.setMap(map);
+                //map.fitBounds(bounds);
+
+                // test if route passes through any crime location
+                var isInvalidRoute = testIfRouteCrossesCrime(polyline);
+
+                if (isInvalidRoute) {
+                    console.log("Route "+r+": INVALID ROUTE");
+                    toRemove.push(r);
+                } else {
+                    console.log("Route "+r+": Route is OK");
+                }
             }
 
-            polyline.setMap(map);
-            map.fitBounds(bounds);
+            
+            var newRoutes = [];
+            
+            for (var i = 0; i < Math.min(response.routes.length, 3); i++) {
+                var isValid = true;
+                for (var j = 0; j < toRemove.length; j++) {
+                    if (i == toRemove[j]) {
+                        isValid = false;
+                        break;
+                    }
+                }
 
-            var pos1 = new google.maps.LatLng(40.110413,-88.223920);
-            var marker1 = new google.maps.Marker({position: pos1, map: map});
-
-            if (google.maps.geometry.poly.isLocationOnEdge(pos1, polyline, 0.0005)) {
-                console.log("POS 1: Relocate!");
-            } else {
-                console.log("POS 1: No danger");
+                if (isValid) {
+                    newRoutes.push(response.routes[i]);
+                }
             }
 
-            var pos2 = new google.maps.LatLng(40.110434,-88.223475);
-            var marker2 = new google.maps.Marker({position: pos2, map: map});
+            // remove invalid routes, prevent them from being displayed
+            response.routes = newRoutes; //comment this to display all routes again
 
-            if (google.maps.geometry.poly.isLocationOnEdge(pos2, polyline, 0.0005)) {
-                console.log("POS 2: Relocate!");
-            } else {
-                console.log("POS 2: No danger");
-            }
-
-            var pos3 = new google.maps.LatLng(40.110452,-88.222957);
-            var marker3 = new google.maps.Marker({position: pos3, map: map});
-
-            if (google.maps.geometry.poly.isLocationOnEdge(pos3, polyline, 0.0005)) {
-                console.log("POS 3: Relocate!");
-            } else {
-                console.log("POS 3: No danger");
-            }
-
+            // display only the valid routes
             me.directionsDisplay.setDirections(response);
 
             
@@ -283,4 +300,22 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         }
     });
 }}
+
+// takes a route as a polyline and compares location of each crime with it and determines if it passes any
+function testIfRouteCrossesCrime(route) {
+    for (var i = 0; i < coordinates.length; i++) {
+        var crimeLocation = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
+
+        if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, 0.00025)) {
+            //console.log("Location "+i+": DANGER!");
+            return true;
+        } else {
+            //console.log("Location "+i+": No danger");
+        } 
+    }
+
+    return false;
+}
+
+
 
