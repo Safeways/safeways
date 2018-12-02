@@ -52,7 +52,7 @@ function plotCrimes() {
     $(document).ready(function() {
         $.ajax({
            type: "GET",
-           url: "recent_severe_crimes.csv",
+           url: "../services/frontend_files/recent_severe_crimes.csv",
            dataType: "text",
            success: function(test) {processData(test);}
          });
