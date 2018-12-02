@@ -14,6 +14,7 @@ function initMap() {
     });
 
     plotCrimes();
+    getAvoidanceRadius();
 
 
     // get current location
@@ -135,6 +136,46 @@ function plotCrimes() {
         }
     }
 }
+
+function getAvoidanceRadius() {
+        // get csv file
+        $(document).ready(function() {
+            $.ajax({
+               type: "GET",
+               url: "../services/frontend_files/severity_and_avoidance_radius.csv",
+               dataType: "text",
+               success: function(test) {processData(test);}
+             });
+         });
+    
+        function processData(allText) {
+            var allTextLines = allText.split(/\r\n|\n/);
+            var headers = allTextLines[0].split(',');
+            var allData = []
+    
+            // parse csv text into a 2d array
+            for (var i=1; i<allTextLines.length; i++) {
+                var data = allTextLines[i].split(',');
+                if (data.length == headers.length) {
+    
+                    var tempArr = [];
+                    for (var j=0; j<headers.length; j++) {
+                            tempArr.push(data[j]);
+                    }
+                    allData.push(tempArr);
+                }
+            }
+    
+    
+            // pick out latitude and longitude data from all the data, store that in crimes array
+            for (var i = 0; i < allData.length; i++) {
+                avoidanceRadiusDict[allData[i][2]] = allData[i][3]
+                
+            }
+    
+        }
+    }
+
 
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
