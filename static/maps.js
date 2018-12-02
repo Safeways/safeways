@@ -289,6 +289,11 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
             // remove invalid routes, prevent them from being displayed
             response.routes = newRoutes; //comment this to display all routes again
+            
+            if (newRoutes.length == 0) {
+                window.alert("no safe routes available");
+                
+            }
 
             // display only the valid routes
             me.directionsDisplay.setDirections(response);
