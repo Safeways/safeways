@@ -1,5 +1,7 @@
 import pandas as pd
 import decimal
+import datetime
+from filter_by_time import flip_dates, deadline_time
 
 def drange(start, end, increment):
     """
@@ -36,28 +38,42 @@ def truncate_2(num):
 
 def frequency_counter(filename):
     """
-    Counts how many times a crime occurs at the same place.
+    Creates a dictionary that correlates a location with crimes that happen at that place.
     'Same place' in this context means it is within the same section
     Sections are defined as areas within .01 of each other
-    i.e. (i.e. (40.255,-88) and (40.265,-88) are considered to be the same area)
-
+    i.e. (i.e. (40.255,-88) and (40.264,-88) are considered to be the same area)
     :param filename: filename to take crimes from
-    :return: dictionary with coordinates (of blocks) mapped to frequency of crimes in that area
+    :return: dictionary with coordinates (of blocks) mapped to the dates/times that crimes
+            have happened at that location
     """
-
-    THRESHHOLD = 5 # if the number of crimes in an area exceed threshhold, it is marked as a dangerous zone
-
     dataframe = pd.read_csv(filename)
-    [lat,long] = [list(dataframe.latitude), list(dataframe.longitude)]
-    coordinates = [(truncate_4(lat[i]), truncate_4(long[i])) for i in range(len(lat))]
+    [lat, long] = [list(dataframe.latitude), list(dataframe.longitude)]
 
-    count = {}
+    count = {(truncate_2(lat[i]), truncate_2(long[i])): [] for i in range(len(lat))}
+    for i in range(len(dataframe.latitude)):
+        lat = truncate_2(dataframe.latitude[i])
+        long = truncate_2(dataframe.longitude[i])
+        count[lat, long].append(dataframe.loc[i, "date_and_time"])
 
-    for c in coordinates:
-        lt = truncate_2(truncate_2(c[0]))
-        lg = truncate_2(truncate_2(c[1]))
+    return count
 
-        if (lt, lg) not in count: count[(lt,lg)] = 1
-        else: count[(lt,lg)] += 1
 
-    return {k:v for k,v in count.items() if v >= THRESHHOLD}
+def dangerous(counts):
+    """
+    Using the counts dictionary returned by the previous function, chooses only the locations where crimes have
+         occured more than 6 times in the past year.
+
+    :param counts: dictionary of locations mapped to times that crimes have happened there
+    :return: dictionary of same format but only with locations where crimes have happened recently
+    """
+    recent_only = {}
+    for k, v in counts.items():
+        count = 0
+        for dt in v:
+            if flip_dates(dt) > deadline_time(12):
+                count += 1
+
+        if count >= 6:
+            recent_only[k] = v
+
+    return recent_only

@@ -10,7 +10,6 @@ SEVERE_CRIMES = ("[UIPD] BATTERY", "[UIPD] CARRYING OUT OF PREMISE", "[UIPD] ROB
 def filter_types(filename):
     """
     Removes entries from the CSV if it is not considered a 'severe crime'
-
     :param filename: file to remove crimes from
     """
 
@@ -20,4 +19,23 @@ def filter_types(filename):
 
     for tp in to_remove: dataframe = dataframe[dataframe.incident_type_primary != tp]
 
-    dataframe.to_csv(path_or_buf="filtered_by_type_crime_data.csv", sep=",")
+    # important data for crimes:
+    # - crime location (coordinates for map use only)
+    # - crime time
+    # - crime type
+    # - crime description
+    # - address (for human use only)
+    important_col = ("latitude", "longitude", "incident_datetime", "incident_type_primary", "incident_description",
+                        "address_1", "city", "state", "zip")
+
+    for label in list(dataframe.columns.values):
+        if label not in important_col:
+            dataframe = dataframe.drop(columns=label)
+
+    dataframe = dataframe.rename(columns={"incident_type_primary": "type",
+                                        "incident_description": "description",
+                                        "address_1": "street_address",
+                                        "incident_datetime": "date_and_time"})
+
+
+    dataframe.to_csv(path_or_buf="filtered_by_type_crime_data.csv", sep=",", index=False)
