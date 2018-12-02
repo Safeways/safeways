@@ -346,8 +346,10 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 function testIfRouteCrossesCrime(route) {
     for (var i = 0; i < coordinates.length; i++) {
         var crimeLocation = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
+        var crimeType = allCrimeData[i][1];
+        var radius = avoidanceRadiusDict[crimeType] / (69.2 * 3);
 
-        if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, 0.00025)) {
+        if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, radius)) {
             //console.log("Location "+i+": DANGER!");
             return true;
         } else {
