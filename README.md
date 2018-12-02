@@ -1,5 +1,5 @@
 # Safeways
-![alt text](https://github.com/CS196Illinois/safeways/blob/master/MapFrontEnd/banner.png "Safeways Banner")
+![alt text](https://github.com/CS196Illinois/safeways/blob/master/templates/banner.png "Safeways Banner")
 _Banner by Kathy Zhou (kathyyzhou)_
 
 Safeways is a webapp that maps the safest route from one place to another by accounting for recent and frequent crime locations in the University of Illinois at Urbana-Champaign campus area. 
