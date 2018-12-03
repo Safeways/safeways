@@ -1,4 +1,3 @@
-# Safeways
 ![alt text](https://github.com/CS196Illinois/safeways/blob/master/static/banner.png "Safeways Banner")
 _Banner by Kathy Zhou (kathyyzhou)_
 
