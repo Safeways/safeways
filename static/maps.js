@@ -57,11 +57,11 @@ function plotCrimes() {
         $.ajax({
            type: "GET",
            url: "http://127.0.0.1:5000/recentdata",
-           dataType: "json",
-           success: function(test) {processData(JSON.stringify(test));}
+           async: false,
+           success: function(text) {processData(text)};
          });
      });
-
+    window.alert(response);
 
     // process crime data from csv, add markers to map
     function processData(allText) {
@@ -143,14 +143,14 @@ function plotCrimes() {
 
 function getAvoidanceRadius() {
         // get csv file
-        $(document).ready(function() {
-            $.ajax({
-               type: "GET",
-               url: "../services/frontend_files/severity_and_avoidance_radius.csv",
-               dataType: "text",
-               success: function(test) {processData(test);}
-             });
-         });
+        $(document).ready(function() {
+            $.ajax({
+               type: "GET",
+               url: "http://127.0.0.1:5000/severity",
+               async: false,
+               success: function(text) {processData(text)};
+             });
+         });
     
         function processData(allText) {
             var allTextLines = allText.split(/\r\n|\n/);

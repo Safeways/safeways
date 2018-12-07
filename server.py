@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from services.driver import main as update_data
@@ -10,6 +10,7 @@ app = Flask(__name__)
 scheduler = BackgroundScheduler()
 job = scheduler.add_job(update_data, 'interval', days=1)
 scheduler.start()
+
 
 @app.route("/")
 
@@ -24,7 +25,12 @@ def about():
 @app.route("/recentdata", methods = ['GET'])
 def get_recent():
     danger, recent, severity = convert()
-    return jsonify({"status":"ok", "content":recent})
+    return recent
+
+@app.route("/severity", methods = ['GET'])
+def get_severity():
+    danger, recent, severity = convert()
+    return severity
 
 if __name__ == "__main__":
     app.run(debug=True)
