@@ -4,7 +4,6 @@ from services.filter_by_time import *
 from services.emphasis_frequency import *
 from services.get_useful_data import *
 from services.clean_csv_files import *
-from services.csv_to_string import *
 
 def main():
     update_csv()
@@ -14,9 +13,6 @@ def main():
     get_useful_data(danger_zones)
     clean_all()
     print("Data updated.")
-    danger, recent = csv_to_string()
-    print("Data converted.")
-    return recent
 
 if __name__== "__main__":
     main()
