@@ -12,9 +12,6 @@ def csv_to_string():
 
     with open("services/frontend_files/severity_and_avoidance_radius.csv") as f:
         severity_string = f.read() + "\n"
-    
-    print(danger_string)
-    print("recent string starts")
-    print(recent_string)
+
 
     return danger_string, recent_string, severity_string

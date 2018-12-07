@@ -49,6 +49,8 @@ function initMap() {
 
 function plotCrimes() {
 
+
+    /*
     // get csv file
     $(document).ready(function() {
         $.ajax({
@@ -58,7 +60,7 @@ function plotCrimes() {
            success: function(test) {processData(test);}
          });
      });
-
+    */
 
     // process crime data from csv, add markers to map
     function processData(allText) {
