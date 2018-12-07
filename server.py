@@ -7,7 +7,7 @@ from services.driver import main as update_data
 app = Flask(__name__)
 
 scheduler = BackgroundScheduler()
-job = scheduler.add_job(update_data, 'interval', seconds=10)
+job = scheduler.add_job(update_data, 'interval', days=10)
 scheduler.start()
 
 @app.route("/")
