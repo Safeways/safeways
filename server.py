@@ -1,22 +1,21 @@
-from flask import Flask, render_template
-from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask, render_template, request
+#from apscheduler.schedulers.background import BackgroundScheduler
 
 from services.driver import main as update_data
 
 #Main server
 app = Flask(__name__)
 
-scheduler = BackgroundScheduler()
-job = scheduler.add_job(update_data, 'interval', days=1)
-scheduler.start()
+#scheduler = BackgroundScheduler()
+#job = scheduler.add_job(update_data, 'interval', days=1)
+#scheduler.start()
 
 @app.route("/")
 
-
 @app.route("/index.html", methods = ['GET'])
 def index():
-    danger, recent = update_data()
-    return render_template("index.html", recent=str(recent))
+    recent = update_data()
+    return render_template("index.html", data=recent)
 
 @app.route("/about.html", methods = ['GET'])
 def about():

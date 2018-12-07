@@ -14,8 +14,9 @@ def main():
     get_useful_data(danger_zones)
     clean_all()
     print("Data updated.")
-    return csv_to_string()
-
+    danger, recent = csv_to_string()
+    print("Data converted.")
+    return recent
 
 if __name__== "__main__":
     main()
