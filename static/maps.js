@@ -6,14 +6,15 @@ var coordinates = [];
 var markers = [];
 var avoidanceRadiusDict = {};
 
-function initMap(allText) {
+function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: currentLocation,
         zoom: 13
     });
 
-    plotCrimes(allText);
+    plotCrimes();
+    getAvoidanceRadius();
 
 
     // get current location
@@ -46,7 +47,7 @@ function initMap(allText) {
 
 
 
-function plotCrimes(allText) {
+function plotCrimes() {
 
     // get csv file
     $(document).ready(function() {
@@ -135,6 +136,46 @@ function plotCrimes(allText) {
         }
     }
 }
+
+function getAvoidanceRadius() {
+        // get csv file
+        $(document).ready(function() {
+            $.ajax({
+               type: "GET",
+               url: "../services/frontend_files/severity_and_avoidance_radius.csv",
+               dataType: "text",
+               success: function(test) {processData(test);}
+             });
+         });
+    
+        function processData(allText) {
+            var allTextLines = allText.split(/\r\n|\n/);
+            var headers = allTextLines[0].split(',');
+            var allData = []
+    
+            // parse csv text into a 2d array
+            for (var i=1; i<allTextLines.length; i++) {
+                var data = allTextLines[i].split(',');
+                if (data.length == headers.length) {
+    
+                    var tempArr = [];
+                    for (var j=0; j<headers.length; j++) {
+                            tempArr.push(data[j]);
+                    }
+                    allData.push(tempArr);
+                }
+            }
+    
+    
+            // pick out latitude and longitude data from all the data, store that in crimes array
+            for (var i = 0; i < allData.length; i++) {
+                avoidanceRadiusDict[allData[i][2]] = allData[i][3]
+                
+            }
+    
+        }
+    }
+
 
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -310,8 +351,10 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 function testIfRouteCrossesCrime(route) {
     for (var i = 0; i < coordinates.length; i++) {
         var crimeLocation = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
+        var crimeType = allCrimeData[i][1];
+        var radius = avoidanceRadiusDict[crimeType] / (69.2 * 3);
 
-        if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, 0.00025)) {
+        if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, radius)) {
             //console.log("Location "+i+": DANGER!");
             return true;
         } else {
