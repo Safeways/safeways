@@ -16,7 +16,7 @@ scheduler.start()
 @app.route("/index.html", methods = ['GET'])
 def index():
     danger, recent, severity = convert()
-    return render_template("index.html", data=recent)
+    return render_template("index.html", recent=recent)
 
 @app.route("/about.html", methods = ['GET'])
 def about():
