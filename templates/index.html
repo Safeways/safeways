@@ -43,13 +43,13 @@
 </div>
 
     {% if recent %}
-    <textarea name="recent_crimes" id="recent_crimes">
+    <textarea name="recent_crimes" id="recent_crimes" style="display:none;">
       {{recent}}
     </textarea>
     {% endif %}
 
     {% if severity %}
-    <textarea name="severity" id="severity">
+    <textarea name="severity" id="severity" style="display:none;">
       {{severity}}
     </textarea>
     {% endif %}
