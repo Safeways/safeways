@@ -48,23 +48,24 @@ function initMap() {
 
 
 function plotCrimes() {
-    var sometext = "-----";
-    var alltext = {{recent}};
+    //var sometext = "-----";
+    //var alltext = {{recent}};
 //Url local host? - how to make a get request send data
-    /*
+
     // get csv file
     $(document).ready(function() {
         $.ajax({
            type: "GET",
-           url: "../services/frontend_files/recent_severe_crimes.csv",
-           dataType: "text",
-           success: function(test) {processData(test);}
+           url: "http://127.0.0.1:5000/recentdata",
+           dataType: "json",
+           success: function(test) {processData(JSON.stringify(test));}
          });
      });
-    */
+
 
     // process crime data from csv, add markers to map
     function processData(allText) {
+        window.alert(allText);
         var allTextLines = allText.split(/\r\n|\n/);
         var headers = allTextLines[0].split(',');
 
