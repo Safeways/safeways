@@ -48,8 +48,9 @@ function initMap() {
 
 
 function plotCrimes() {
-
-
+    var sometext = "-----";
+    var alltext = {{recent}};
+//Url local host? - how to make a get request send data
     /*
     // get csv file
     $(document).ready(function() {
