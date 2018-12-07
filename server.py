@@ -7,7 +7,7 @@ from services.driver import main as update_data
 app = Flask(__name__)
 
 scheduler = BackgroundScheduler()
-job = scheduler.add_job(update_data, 'interval', days=10)
+job = scheduler.add_job(update_data, 'interval', days=1)
 scheduler.start()
 
 @app.route("/")
@@ -15,7 +15,8 @@ scheduler.start()
 
 @app.route("/index.html", methods = ['GET'])
 def index():
-    return render_template("index.html")
+    danger, recent = update_data()
+    return render_template("index.html", recent=str(recent))
 
 @app.route("/about.html", methods = ['GET'])
 def about():

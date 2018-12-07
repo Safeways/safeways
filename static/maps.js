@@ -6,14 +6,14 @@ var coordinates = [];
 var markers = [];
 var avoidanceRadiusDict = {};
 
-function initMap() {
+function initMap(allText) {
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: currentLocation,
         zoom: 13
     });
 
-    plotCrimes();
+    plotCrimes(allText);
 
 
     // get current location
@@ -46,7 +46,7 @@ function initMap() {
 
 
 
-function plotCrimes() {
+function plotCrimes(allText) {
 
     // get csv file
     $(document).ready(function() {
