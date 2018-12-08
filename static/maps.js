@@ -61,7 +61,6 @@ function plotCrimes() {
 
     // process crime data from csv, add markers to map
     function processData(allText) {
-        window.alert(allText);
         var allTextLines = allText.split(/\r\n|\n/);
         var headers = allTextLines[0].split(',');
 
