@@ -6,6 +6,14 @@ var coordinates = [];
 var markers = [];
 var avoidanceRadiusDict = {};
 
+(function(window, document, undefined){
+    window.onload = init;
+    function init() {
+        initMap();
+    }
+}) (window, document, undefined);
+
+
 function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -48,20 +56,11 @@ function initMap() {
 
 
 function plotCrimes() {
-    //var sometext = "-----";
-    //var alltext = {{recent}};
-//Url local host? - how to make a get request send data
+    var recent = document.getElementById("recent").value;
 
-    // get csv file
-    $(document).ready(function() {
-        $.ajax({
-           type: "GET",
-           url: "http://127.0.0.1:5000/recentdata",
-           async: false,
-           success: function(text) {processData(text)};
-         });
-     });
-    window.alert(response);
+    console.log(recent);
+
+    processData(recent);
 
     // process crime data from csv, add markers to map
     function processData(allText) {
@@ -142,15 +141,11 @@ function plotCrimes() {
 }
 
 function getAvoidanceRadius() {
-        // get csv file
-        $(document).ready(function() {
-            $.ajax({
-               type: "GET",
-               url: "http://127.0.0.1:5000/severity",
-               async: false,
-               success: function(text) {processData(text)};
-             });
-         });
+        var severity = document.getElementById("severity").value;
+
+        console.log(severity);
+
+        processData(severity);
     
         function processData(allText) {
             var allTextLines = allText.split(/\r\n|\n/);

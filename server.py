@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from services.driver import main as update_data
@@ -16,21 +16,12 @@ scheduler.start()
 
 @app.route("/index.html", methods = ['GET'])
 def index():
-    return render_template("index.html")
+    danger, recent, severity = convert()
+    return render_template("index.html", recent=recent, severity=severity)
 
 @app.route("/about.html", methods = ['GET'])
 def about():
     return render_template("about.html")
-
-@app.route("/recentdata", methods = ['GET'])
-def get_recent():
-    danger, recent, severity = convert()
-    return recent
-
-@app.route("/severity", methods = ['GET'])
-def get_severity():
-    danger, recent, severity = convert()
-    return severity
 
 if __name__ == "__main__":
     app.run(debug=True)
