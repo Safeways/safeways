@@ -38,4 +38,4 @@ def filter_types(filename):
                                         "incident_datetime": "date_and_time"})
 
 
-    dataframe.to_csv(path_or_buf="filtered_by_type_crime_data.csv", sep=",", index=False)
+    dataframe.to_csv(path_or_buf="services/filtered_by_type_crime_data.csv", sep=",", index=False)

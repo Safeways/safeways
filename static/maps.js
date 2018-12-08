@@ -6,6 +6,14 @@ var coordinates = [];
 var markers = [];
 var avoidanceRadiusDict = {};
 
+(function(window, document, undefined){
+    window.onload = init;
+    function init() {
+        initMap();
+    }
+}) (window, document, undefined);
+
+
 function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -48,17 +56,8 @@ function initMap() {
 
 
 function plotCrimes() {
-
-    // get csv file
-    $(document).ready(function() {
-        $.ajax({
-           type: "GET",
-           url: "../services/frontend_files/recent_severe_crimes.csv",
-           dataType: "text",
-           success: function(test) {processData(test);}
-         });
-     });
-
+    var recent = document.getElementById("recent").value;
+    processData(recent);
 
     // process crime data from csv, add markers to map
     function processData(allText) {
@@ -67,15 +66,17 @@ function plotCrimes() {
 
         // parse csv text into a 2d array
         for (var i=1; i<allTextLines.length; i++) {
-            var data = allTextLines[i].split(',');
-            if (data.length == headers.length) {
+            try {
+                var data = allTextLines[i].split(',');
+                if (data.length == headers.length) {
 
-                var tempArr = [];
-                for (var j=0; j<headers.length; j++) {
-                        tempArr.push(data[j]);
-                }
-                allCrimeData.push(tempArr);
-            }
+                    var tempArr = [];
+                    for (var j=0; j<headers.length; j++) {
+                            tempArr.push(data[j]);
+                    }
+                    allCrimeData.push(tempArr);
+                }
+            } catch (e) { }
         }
 
 
@@ -91,7 +92,8 @@ function plotCrimes() {
 
         // loop through crimes and create markers for each
         for (var i = 0; i < coordinates.length; i++) {
-            markers.push(
+            try {
+                markers.push(
                 {
                     coords:{lat: Number(coordinates[i][0]),lng: Number(coordinates[i][1])},
                     iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
@@ -99,7 +101,8 @@ function plotCrimes() {
                              '<p><b>Date and Time: </b>'+allCrimeData[i][0]+'</p>'+
                              '<p><b>Description: </b>'+allCrimeData[i][2]+'</p>'
                 }
-            );
+                );
+            } catch (e) {}
         }
 
 
@@ -138,15 +141,8 @@ function plotCrimes() {
 }
 
 function getAvoidanceRadius() {
-        // get csv file
-        $(document).ready(function() {
-            $.ajax({
-               type: "GET",
-               url: "../services/frontend_files/severity_and_avoidance_radius.csv",
-               dataType: "text",
-               success: function(test) {processData(test);}
-             });
-         });
+        var severity = document.getElementById("severity").value;
+        processData(severity);
     
         function processData(allText) {
             var allTextLines = allText.split(/\r\n|\n/);
@@ -155,21 +151,25 @@ function getAvoidanceRadius() {
     
             // parse csv text into a 2d array
             for (var i=1; i<allTextLines.length; i++) {
-                var data = allTextLines[i].split(',');
-                if (data.length == headers.length) {
-    
-                    var tempArr = [];
-                    for (var j=0; j<headers.length; j++) {
-                            tempArr.push(data[j]);
-                    }
-                    allData.push(tempArr);
-                }
+                try {
+                    var data = allTextLines[i].split(',');
+                    if (data.length == headers.length) {
+
+                        var tempArr = [];
+                        for (var j=0; j<headers.length; j++) {
+                                tempArr.push(data[j]);
+                        }
+                        allData.push(tempArr);
+                    }
+                } catch (e) {}
             }
     
     
             // pick out latitude and longitude data from all the data, store that in crimes array
             for (var i = 0; i < allData.length; i++) {
-                avoidanceRadiusDict[allData[i][2]] = allData[i][3]
+                try {
+                    avoidanceRadiusDict[allData[i][2]] = allData[i][3];
+                } catch (e) { }
                 
             }
     
@@ -332,7 +332,7 @@ AutocompleteDirectionsHandler.prototype.route = function() {
             response.routes = newRoutes; //comment this to display all routes again
             
             if (newRoutes.length == 0) {
-                window.alert("no safe routes available");
+                window.alert("\t\t\t\tNo Safe Routes Available.\n\tCall SafeRides (217)-265-7433 or SafeWalks (217)-333-1216");
                 
             }
 
@@ -350,16 +350,19 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 // takes a route as a polyline and compares location of each crime with it and determines if it passes any
 function testIfRouteCrossesCrime(route) {
     for (var i = 0; i < coordinates.length; i++) {
-        var crimeLocation = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
-        var crimeType = allCrimeData[i][1];
-        var radius = avoidanceRadiusDict[crimeType] / (69.2 * 3);
+        try {
+            var crimeLocation = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
+            var crimeType = allCrimeData[i][1];
+            var radius = avoidanceRadiusDict[crimeType] / (69.2 * 3);
 
-        if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, radius)) {
-            //console.log("Location "+i+": DANGER!");
-            return true;
-        } else {
-            //console.log("Location "+i+": No danger");
-        } 
+            if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, radius)) {
+                //console.log("Location "+i+": DANGER!");
+                return true;
+            } else {
+                //console.log("Location "+i+": No danger");
+            }
+        } catch (e) {}
+
     }
 
     return false;

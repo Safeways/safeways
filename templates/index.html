@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="shortcut icon" href="../static/favicon.ico">
+
     <title>Safeways Map</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
@@ -14,6 +16,8 @@
         <h1><a href="index.html">Safeways</a></h1>
         <ul>
           <li><a href="index.html">Map</a></li>
+          <li><a href="https://www.uber.com">Uber</a></li>
+          <li><a href="https://www.lyft.com/rider">Lyft</a></li>
           <li><a href="about.html">About</a></li>
         </ul>
       </div>
@@ -39,9 +43,10 @@
 <div id="right-panel">
   <p>Directions: <span id="total"></span></p>
 </div>
+    <textarea name="recent" id="recent" style="display:none"> {{recent}} </textarea>
+    <textarea name="severity" id="severity" style="display:none"> {{severity}} </textarea>
 
-    <script type = "text/javascript" src = "../static/maps.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/maps.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB067EUJKJfiuOHQvfI94iE738E4xOV2kw&libraries=places&callback=initMap"
         async defer></script>
   </body>

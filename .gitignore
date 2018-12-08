@@ -106,3 +106,11 @@ bh_unicode_properties.cache
 # Sublime-github package stores a github token in this file
 # https://packagecontrol.io/packages/sublime-github
 GitHub.sublime-settings
+__pycache__/server.cpython-37.pyc
+
+#pycache stuff
+#source: https://github.com/martinohanlon/flightlight/issues/1
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
