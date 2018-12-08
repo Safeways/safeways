@@ -332,7 +332,7 @@ AutocompleteDirectionsHandler.prototype.route = function() {
             response.routes = newRoutes; //comment this to display all routes again
             
             if (newRoutes.length == 0) {
-                window.alert("no safe routes available");
+                window.alert("\t\t\t\tNo Safe Routes Available.\n\tCall SafeRides (217)-265-7433 or SafeWalks (217)-333-1216");
                 
             }
 
