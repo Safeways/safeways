@@ -57,9 +57,6 @@ function initMap() {
 
 function plotCrimes() {
     var recent = document.getElementById("recent").value;
-
-    console.log(recent);
-
     processData(recent);
 
     // process crime data from csv, add markers to map
@@ -142,9 +139,6 @@ function plotCrimes() {
 
 function getAvoidanceRadius() {
         var severity = document.getElementById("severity").value;
-
-        console.log(severity);
-
         processData(severity);
     
         function processData(allText) {
