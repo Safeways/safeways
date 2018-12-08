@@ -66,15 +66,17 @@ function plotCrimes() {
 
         // parse csv text into a 2d array
         for (var i=1; i<allTextLines.length; i++) {
-            var data = allTextLines[i].split(',');
-            if (data.length == headers.length) {
+            try {
+                var data = allTextLines[i].split(',');
+                if (data.length == headers.length) {
 
-                var tempArr = [];
-                for (var j=0; j<headers.length; j++) {
-                        tempArr.push(data[j]);
-                }
-                allCrimeData.push(tempArr);
-            }
+                    var tempArr = [];
+                    for (var j=0; j<headers.length; j++) {
+                            tempArr.push(data[j]);
+                    }
+                    allCrimeData.push(tempArr);
+                }
+            } catch (e) { }
         }
 
 
@@ -90,7 +92,8 @@ function plotCrimes() {
 
         // loop through crimes and create markers for each
         for (var i = 0; i < coordinates.length; i++) {
-            markers.push(
+            try {
+                markers.push(
                 {
                     coords:{lat: Number(coordinates[i][0]),lng: Number(coordinates[i][1])},
                     iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
@@ -98,7 +101,8 @@ function plotCrimes() {
                              '<p><b>Date and Time: </b>'+allCrimeData[i][0]+'</p>'+
                              '<p><b>Description: </b>'+allCrimeData[i][2]+'</p>'
                 }
-            );
+                );
+            } catch (e) {}
         }
 
 

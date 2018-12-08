@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from services.driver import main as update_data
