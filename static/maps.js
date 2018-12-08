@@ -151,21 +151,25 @@ function getAvoidanceRadius() {
     
             // parse csv text into a 2d array
             for (var i=1; i<allTextLines.length; i++) {
-                var data = allTextLines[i].split(',');
-                if (data.length == headers.length) {
-    
-                    var tempArr = [];
-                    for (var j=0; j<headers.length; j++) {
-                            tempArr.push(data[j]);
-                    }
-                    allData.push(tempArr);
-                }
+                try {
+                    var data = allTextLines[i].split(',');
+                    if (data.length == headers.length) {
+
+                        var tempArr = [];
+                        for (var j=0; j<headers.length; j++) {
+                                tempArr.push(data[j]);
+                        }
+                        allData.push(tempArr);
+                    }
+                } catch (e) {}
             }
     
     
             // pick out latitude and longitude data from all the data, store that in crimes array
             for (var i = 0; i < allData.length; i++) {
-                avoidanceRadiusDict[allData[i][2]] = allData[i][3]
+                try {
+                    avoidanceRadiusDict[allData[i][2]] = allData[i][3];
+                } catch (e) { }
                 
             }
     
@@ -346,16 +350,19 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 // takes a route as a polyline and compares location of each crime with it and determines if it passes any
 function testIfRouteCrossesCrime(route) {
     for (var i = 0; i < coordinates.length; i++) {
-        var crimeLocation = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
-        var crimeType = allCrimeData[i][1];
-        var radius = avoidanceRadiusDict[crimeType] / (69.2 * 3);
+        try {
+            var crimeLocation = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
+            var crimeType = allCrimeData[i][1];
+            var radius = avoidanceRadiusDict[crimeType] / (69.2 * 3);
 
-        if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, radius)) {
-            //console.log("Location "+i+": DANGER!");
-            return true;
-        } else {
-            //console.log("Location "+i+": No danger");
-        } 
+            if (google.maps.geometry.poly.isLocationOnEdge(crimeLocation, route, radius)) {
+                //console.log("Location "+i+": DANGER!");
+                return true;
+            } else {
+                //console.log("Location "+i+": No danger");
+            }
+        } catch (e) {}
+
     }
 
     return false;
