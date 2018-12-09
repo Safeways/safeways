@@ -10,9 +10,9 @@ Using data provided by the <a href="https://moto.data.socrata.com/dataset/Univer
 # Usage
 To clone our repository `git clone https://github.com/CS196Illinois/safeways.git`
 
-Install package dependencies `pip install -r requirements.txt`
+Install package dependencies (or install through <a href="https://www.jetbrains.com/pycharm/download/#section=windows">Pycharm Community</a>) `pip install -r requirements.txt`
 
-Run `server.py`
+Run (<a href="https://www.jetbrains.com/pycharm/download/#section=windows">Pycharm Community</a> is recommended) `server.py`
 
 Navigate to `http://127.0.0.1:5000/`
 
