@@ -16,9 +16,13 @@ Run (<a href="https://www.jetbrains.com/pycharm/download/#section=windows">Pycha
 
 Navigate to `http://127.0.0.1:5000/`
 
+If a navigation bar does not appear, clear your browser's cache from the past hour.
+
 # Contributors
 Safeways is a project made by students in the Fall 2018 CS 196 class at the University of Illinois at Urbana-Champaign.
 
 Project members: Hannah Wang (hlwang3), Kathy Zhou (kathyyzhou), Dev Satpathy (devsatpathy), Willy Ling (weikeng2), Melissa Chen (melissachen2000)
 
 Project manager: Kavi Ravuri
+
+Thank you for using Safeways!
